@@ -79,3 +79,24 @@ def get_response(prompt):
     
     # Return the generated response
     return answer
+
+
+###################################
+# STEP 4: Main Program Logic
+###################################
+
+if __name__ == "__main__":
+    
+    print("Hi! I am a chatbot.")
+    prompt = ""
+    
+    print("Talk to me")
+    
+    while True:  # Keep the loop running indefinitely
+        prompt = convert_speech_text()  # Get the speech-to-text result
+        
+        if prompt:  # If speech is recognized
+            print(f"YOU: {prompt}")
+            
+            # Generate a response and proceed
+            print(f"ANSWER: {get_response(prompt)}\n")
