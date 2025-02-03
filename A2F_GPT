@@ -29,3 +29,25 @@ def load_index(pickle_path, faiss_index_path):
         context = pickle.load(f)
     index = faiss.read_index(faiss_index_path)
     return index, context
+
+
+
+###################################
+# STEP 2: Get Similarity Between Prompt and Knowledge Base
+###################################
+
+def get_similarity(index, knowledge, prompt, k):
+    response = client.embeddings.create(model="text-embedding-ada-002", input=[prompt])
+    embedding = response.data[0].embedding
+
+    embedding_array = np.array(embedding).astype("float32")
+    embedding_array = embedding_array.reshape(-1, embedding_array.shape[0])
+
+    D, I = index.search(embedding_array, k=k)
+    indices = I[0]
+
+    selected = ""
+    for i in indices:
+        selected += "\n" + knowledge.iloc[i]
+
+    return selected
