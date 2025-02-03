@@ -51,3 +51,31 @@ def get_similarity(index, knowledge, prompt, k):
         selected += "\n" + knowledge.iloc[i]
 
     return selected
+
+###################################
+# STEP 3: Generate Response from ChatGPT
+###################################
+
+def get_response(prompt):
+    """Generate a response from ChatGPT based on a given prompt"""
+    knowledge_index, knowledge_pkl = load_index(
+        "knowledge/knowledge.pkl", "knowledge/knowledge_index.txt"
+    )
+    context_text = get_similarity(knowledge_index, knowledge_pkl, prompt, 3)
+    
+    # Constructing the message for the GPT model
+    messages = [
+        {
+            "role": "user",
+            "content": f"Imagine you are having a conversation. Answer questions as truthfully as possible getting your response and speaking style from the provided context, and speak conversationally, giving them cues or questions to respond to also. Answer as if you are the person in the provided context, using their writing style, their language, their structure, their tone and any abbreviations \n Context: {context_text} + \n Question: {prompt}",
+        },
+    ]
+    
+    # Send the message to GPT-4 model and get the response
+    response = client.chat.completions.create(
+        model="GPT-4", messages=messages, temperature=0.001  # , stream=True
+    )
+    answer = response.choices[0].message.content
+    
+    # Return the generated response
+    return answer
