@@ -31,7 +31,6 @@ def load_index(pickle_path, faiss_index_path):
     return index, context
 
 
-
 ###################################
 # STEP 2: Get Similarity Between Prompt and Knowledge Base
 ###################################
@@ -51,6 +50,7 @@ def get_similarity(index, knowledge, prompt, k):
         selected += "\n" + knowledge.iloc[i]
 
     return selected
+
 
 ###################################
 # STEP 3: Generate Response from ChatGPT
@@ -100,3 +100,9 @@ if __name__ == "__main__":
             
             # Generate a response and proceed
             print(f"ANSWER: {get_response(prompt)}\n")
+            answer = get_response(prompt)
+            
+            ###################################
+            # STEP 5: Convert Response to Speech
+            ###################################
+            get_speech(answer)  # Provide the response in speech form
